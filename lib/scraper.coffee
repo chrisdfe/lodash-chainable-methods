@@ -1,5 +1,6 @@
 _       = require 'lodash'
 request = require 'request'
+cheerio = require 'cheerio'
 
 class Scraper
 
