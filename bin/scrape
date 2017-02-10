@@ -1,1 +1,6 @@
 #!/usr/bin/env node
+require('coffee-script/register');
+
+var Scraper = require("../lib/scraper");
+var scraper = new Scraper();
+scraper.scrape();

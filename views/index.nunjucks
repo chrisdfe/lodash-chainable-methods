@@ -1,6 +1,94 @@
 {% extends 'layout.nunjucks' %}
 
 {% block content %}
-  <h1>{{ title }}</h1>
-  <p>Welcome to {{ title }}</p>
+<style>
+  .chainable {
+    color: blue;
+  }
+
+  .non-chainable {
+    color: red;
+  }
+
+  .method-block {
+
+  }
+</style>
+<div class="method-data"
+  data-chainable="{{ chainable|dump }}"
+  data-non-chainable="{{ non_chainable|dump }}"></div>
+
+<div class="main">
+  <h2 class="method-status"></h2>
+  <input class="form-control method-name-input" type="text" placeholder="e.g. assign, each">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="method-block method-block-chainable">
+          <h3>Chainable</h3>
+
+          <ul>
+            {% for method in chainable %}
+              <li>{{ method }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="method-block method-block-non-chainable">
+          <h3>Non Chainable</h3>
+
+          <ul>
+            {% for method in non_chainable %}
+              <li>{{ method }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var methods = null;
+
+  function methodListContains(key, methodName) {
+    var methodList = methods[key];
+
+    // TODO: fuzzy search
+    return _.includes(methodList, methodName);
+  }
+
+  function searchMethods(methodName) {
+    if (!methods) return;
+
+    var message  = 'not in lodash';
+    var cssClass = '';
+
+    if (methodListContains('chainable', methodName)) {
+      message = 'chainable';
+      cssClass = 'chainable';
+    } else if (methodListContains('nonChainable', methodName)) {
+      message = 'not chainable';
+      cssClass = 'non-chainable';
+    }
+
+    $('.method-status')
+      .html('"' + methodName + '" is ' + message)
+      .removeClass('chainable non-chainable')
+      .addClass(cssClass);
+  }
+
+  function init() {
+    methods = $('.method-data').data();
+
+    $('.method-name-input').on('keyup', function(e) {
+      searchMethods($(e.target).val());
+    });
+  }
+
+  $(document).ready(init);
+</script>
 {% endblock %}
